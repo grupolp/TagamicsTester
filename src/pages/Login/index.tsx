@@ -1,14 +1,17 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Flex,
     Heading,
     Input,
+    Icon,
     Text,
     VStack,
 } from '@chakra-ui/react';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { toaster } from '@/components/ui/toaster';
@@ -21,6 +24,7 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const {
         register,
@@ -31,27 +35,27 @@ const Login: React.FC = () => {
     const onSubmit = async (data: LoginFormData) => {
         try {
             const response = await api.post('/operator-login', data);
-            
+
             // Suponiendo que el token viene en response.data.token o similar
             // Basado en experiencias comunes con Magneticash
             const token = response.data.token || response.data.access_token || 'dummy-token';
-            
+
             localStorage.setItem('authToken', token);
-            
+
             toaster.create({
-                title: '¡Bienvenido!',
-                description: 'Ingreso exitoso',
+                title: t('login.success'),
+                description: t('login.successDesc'),
                 type: 'success',
             });
-            
+
             navigate('/scanner');
         } catch (error) {
             const axiosError = error as AxiosError<{ message?: string }>;
             const message = axiosError.response?.data?.message || 'Credenciales inválidas o error de conexión';
-            
+
             toaster.create({
-                title: 'Error al ingresar',
-                description: message,
+                title: t('login.error'),
+                description: message || t('login.errorDesc'),
                 type: 'error',
             });
         }
@@ -82,12 +86,12 @@ const Login: React.FC = () => {
                 {/* Logo / título */}
                 <VStack gap={2} mb={8}>
                     <Box
-                        bg="purple.500"
+                        bg="transparent"
                         borderRadius="xl"
                         mb={2}
-                        p={3}
+                        p={1}
                     >
-                        <Text fontSize="2xl">🔐</Text>
+                        <Icon as={UserCircleIcon} boxSize={20} color="white" />
                     </Box>
                     <Heading
                         color="white"
@@ -95,10 +99,10 @@ const Login: React.FC = () => {
                         fontWeight="bold"
                         textAlign="center"
                     >
-                        Tagamics Tester
+                        {t('login.title')}
                     </Heading>
                     <Text color="whiteAlpha.600" fontSize="sm" textAlign="center">
-                        Ingresá tus credenciales para continuar
+                        {t('login.subtitle')}
                     </Text>
                 </VStack>
 
@@ -107,14 +111,15 @@ const Login: React.FC = () => {
                         <Field
                             errorText={errors.email?.message}
                             invalid={!!errors.email}
-                            label="Correo Electrónico"
+                            label={t('login.email')}
                         >
                             <Input
                                 id="login-email"
                                 autoComplete="email"
                                 borderColor="whiteAlpha.200"
                                 color="white"
-                                placeholder="tu@email.com"
+                                px={4}
+                                placeholder={t('login.emailPlaceholder')}
                                 type="email"
                                 _placeholder={{ color: 'whiteAlpha.400' }}
                                 _focus={{
@@ -122,10 +127,10 @@ const Login: React.FC = () => {
                                     boxShadow: '0 0 0 1px var(--chakra-colors-purple-400)',
                                 }}
                                 {...register('email', {
-                                    required: 'El email es obligatorio',
+                                    required: t('login.emailRequired'),
                                     pattern: {
                                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message: 'Email inválido',
+                                        message: t('login.emailInvalid'),
                                     },
                                 })}
                             />
@@ -134,14 +139,15 @@ const Login: React.FC = () => {
                         <Field
                             errorText={errors.password?.message}
                             invalid={!!errors.password}
-                            label="Contraseña"
+                            label={t('login.password')}
                         >
                             <Input
                                 id="login-password"
                                 autoComplete="current-password"
                                 borderColor="whiteAlpha.200"
                                 color="white"
-                                placeholder="••••••••"
+                                px={4}
+                                placeholder={t('login.passwordPlaceholder')}
                                 type="password"
                                 _placeholder={{ color: 'whiteAlpha.400' }}
                                 _focus={{
@@ -149,10 +155,10 @@ const Login: React.FC = () => {
                                     boxShadow: '0 0 0 1px var(--chakra-colors-purple-400)',
                                 }}
                                 {...register('password', {
-                                    required: 'La contraseña es obligatoria',
+                                    required: t('login.passwordRequired'),
                                     minLength: {
                                         value: 4,
-                                        message: 'Mínimo 4 caracteres',
+                                        message: t('login.passwordMinLength'),
                                     },
                                 })}
                             />
@@ -164,7 +170,7 @@ const Login: React.FC = () => {
                             color="white"
                             form="login-form"
                             loading={isSubmitting}
-                            loadingText="Ingresando..."
+                            loadingText={t('login.loading')}
                             mt={2}
                             size="lg"
                             type="submit"
@@ -173,7 +179,7 @@ const Login: React.FC = () => {
                             _active={{ transform: 'translateY(0)' }}
                             transition="all 0.2s"
                         >
-                            Ingresar
+                            {t('login.submit')}
                         </Button>
                     </VStack>
                 </form>

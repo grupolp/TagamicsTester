@@ -1,0 +1,37 @@
+{
+  "login": {
+    "title": "Tagamics Tester",
+    "subtitle": "Enter your credentials to continue",
+    "email": "Email Address",
+    "emailPlaceholder": "Email",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Sign In",
+    "loading": "Signing in...",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Minimum 4 characters",
+    "success": "Welcome!",
+    "successDesc": "Login successful",
+    "error": "Login error",
+    "errorDesc": "Invalid credentials or connection error"
+  },
+  "scanner": {
+    "title": "Scan Machine",
+    "subtitle": "Point the camera at the Tagamics QR code",
+    "footer": "Make sure you have good lighting and keep the QR stable",
+    "errorTitle": "Camera Error",
+    "retry": "Retry",
+    "successTitle": "QR Read!",
+    "successSubtitle": "Machine identified correctly",
+    "machineId": "Machine ID",
+    "testBtn": "🧪 Functional Test",
+    "scanAgain": "Scan another machine",
+    "permissionError": "Camera permission denied. Please enable camera access in your browser settings."
+  },
+  "result": {
+    "title": "Result",
+    "description": "Mercado Pago JSON response will be displayed here."
+  }
+}

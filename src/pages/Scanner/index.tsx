@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Scanner as QrScanner } from '@yudiel/react-qr-scanner';
 import {
     Box,
@@ -14,6 +15,7 @@ import { CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/so
 type ScannerState = 'scanning' | 'success' | 'error';
 
 const Scanner: React.FC = () => {
+    const { t } = useTranslation();
     const [state, setState] = useState<ScannerState>('scanning');
     const [qrValue, setQrValue] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -27,7 +29,7 @@ const Scanner: React.FC = () => {
         const message =
             error instanceof Error
                 ? error.message
-                : 'No se pudo acceder a la cámara.';
+                : t('scanner.errorTitle');
 
         const isCameraPermission =
             message.toLowerCase().includes('permission') ||
@@ -36,8 +38,8 @@ const Scanner: React.FC = () => {
 
         setErrorMessage(
             isCameraPermission
-                ? 'Permiso de cámara denegado. Por favor, habilitá el acceso a la cámara en la configuración de tu navegador.'
-                : `Error de cámara: ${message}`
+                ? t('scanner.permissionError')
+                : `${t('scanner.errorTitle')}: ${message}`
         );
         setState('error');
     };
@@ -74,7 +76,7 @@ const Scanner: React.FC = () => {
                     <VStack gap={4}>
                         <Icon as={ExclamationTriangleIcon} boxSize={14} color="red.300" />
                         <Heading color="red.200" fontSize="xl">
-                            Error de cámara
+                            {t('scanner.errorTitle')}
                         </Heading>
                         <Text color="red.300" fontSize="sm">
                             {errorMessage}
@@ -88,7 +90,7 @@ const Scanner: React.FC = () => {
                             w="full"
                             _hover={{ bg: 'red.500' }}
                         >
-                            Reintentar
+                            {t('scanner.retry')}
                         </Button>
                     </VStack>
                 </Box>
@@ -131,10 +133,10 @@ const Scanner: React.FC = () => {
 
                         <VStack gap={1}>
                             <Heading color="white" fontSize="2xl">
-                                ¡QR Leído!
+                                {t('scanner.successTitle')}
                             </Heading>
                             <Text color="whiteAlpha.600" fontSize="sm">
-                                Máquina identificada correctamente
+                                {t('scanner.successSubtitle')}
                             </Text>
                         </VStack>
 
@@ -147,7 +149,7 @@ const Scanner: React.FC = () => {
                             w="full"
                         >
                             <Text color="whiteAlpha.500" fontSize="xs" mb={1}>
-                                ID de máquina
+                                {t('scanner.machineId')}
                             </Text>
                             <Text
                                 color="green.300"
@@ -174,7 +176,7 @@ const Scanner: React.FC = () => {
                             }}
                             _hover={{ bg: 'green.400' }}
                         >
-                            🧪 Prueba de funcionamiento
+                            {t('scanner.testBtn')}
                         </Button>
 
                         <Button
@@ -185,7 +187,7 @@ const Scanner: React.FC = () => {
                             variant="ghost"
                             _hover={{ color: 'white' }}
                         >
-                            Escanear otra máquina
+                            {t('scanner.scanAgain')}
                         </Button>
                     </VStack>
                 </Box>
@@ -207,10 +209,10 @@ const Scanner: React.FC = () => {
         >
             <VStack gap={2} textAlign="center">
                 <Heading color="white" fontSize="2xl">
-                    Escanear máquina
+                    {t('scanner.title')}
                 </Heading>
                 <Text color="whiteAlpha.600" fontSize="sm">
-                    Apuntá la cámara al código QR de la Tagamics
+                    {t('scanner.subtitle')}
                 </Text>
             </VStack>
 
@@ -286,7 +288,7 @@ const Scanner: React.FC = () => {
             </Box>
 
             <Text color="whiteAlpha.400" fontSize="xs">
-                Asegurate de tener buena iluminación y mantener el QR estable
+                {t('scanner.footer')}
             </Text>
         </Flex>
     );

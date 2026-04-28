@@ -1,0 +1,37 @@
+{
+  "login": {
+    "title": "Tagamics Tester",
+    "subtitle": "Ingresá tus credenciales para continuar",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Email",
+    "password": "Contraseña",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Ingresar",
+    "loading": "Ingresando...",
+    "emailRequired": "El email es obligatorio",
+    "emailInvalid": "Email inválido",
+    "passwordRequired": "La contraseña es obligatoria",
+    "passwordMinLength": "Mínimo 4 caracteres",
+    "success": "¡Bienvenido!",
+    "successDesc": "Ingreso exitoso",
+    "error": "Error al ingresar",
+    "errorDesc": "Credenciales inválidas o error de conexión"
+  },
+  "scanner": {
+    "title": "Escanear máquina",
+    "subtitle": "Apuntá la cámara al código QR de la Tagamics",
+    "footer": "Asegurate de tener buena iluminación y mantener el QR estable",
+    "errorTitle": "Error de cámara",
+    "retry": "Reintentar",
+    "successTitle": "¡QR Leído!",
+    "successSubtitle": "Máquina identificada correctamente",
+    "machineId": "ID de máquina",
+    "testBtn": "🧪 Prueba de funcionamiento",
+    "scanAgain": "Escanear otra máquina",
+    "permissionError": "Permiso de cámara denegado. Por favor, habilitá el acceso a la cámara en la configuración de tu navegador."
+  },
+  "result": {
+    "title": "Resultado",
+    "description": "Aquí se mostrará la respuesta JSON de Mercado Pago."
+  }
+}
