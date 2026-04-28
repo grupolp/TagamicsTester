@@ -158,119 +158,131 @@ const Scanner: React.FC = () => {
                 align="center"
                 direction="column"
                 flex="1"
+                justify="center"
                 minH="calc(100vh - 80px)"
-                px={6}
-                py={8}
-                w="full"
-                maxW="400px"
-                mx="auto"
+                px={4}
             >
-                {/* Header with Terminal Name and Connection Status */}
-                <Flex justify="space-between" align="center" w="full" mb={10}>
-                    <Box w="12px" /> {/* Spacer for centering */}
-                    <Heading color="white" fontSize="4xl" fontWeight="extrabold" textAlign="center" letterSpacing="tight">
-                        {machineData?.tagamic?.terminal?.name || 'Máquina'}
-                    </Heading>
-                    <Flex align="center" justify="flex-end" w="12px">
-                        <Box
-                            boxSize="8px"
-                            borderRadius="full"
-                            bg={machineData?.tagamic?.connected ? 'green.400' : 'red.400'}
-                            boxShadow={machineData?.tagamic?.connected ? '0 0 10px rgba(74, 222, 128, 0.8)' : '0 0 10px rgba(248, 113, 113, 0.8)'}
-                            animation={machineData?.tagamic?.connected ? 'pulse 2s infinite' : undefined}
-                            title={machineData?.tagamic?.connected ? 'Online' : 'Offline'}
-                        />
-                    </Flex>
-                </Flex>
-
-                {/* Step 1: Game Mode */}
-                {activePriceSets.length > 0 && (
-                    <Box w="full" mb={10}>
-                        <Text color="cyan.600" fontSize="sm" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" mb={4}>
-                            1. CHOOSE A GAME MODE
-                        </Text>
-                        <VStack gap={4} align="stretch">
-                            {activePriceSets.map((ps, index) => (
-                                <Flex
-                                    key={index}
-                                    direction="column"
-                                    align="center"
-                                    justify="center"
-                                    bg="#8b3dff"
-                                    p={5}
-                                    borderRadius="xl"
-                                    boxShadow="0 8px 32px rgba(139, 61, 255, 0.4)"
-                                    cursor="pointer"
-                                    transition="all 0.2s"
-                                    _hover={{ transform: 'scale(1.02)' }}
-                                    _active={{ transform: 'scale(0.98)' }}
-                                >
-                                    <Text color="white" fontSize="3xl" fontWeight="900" fontVariantNumeric="tabular-nums" lineHeight="1">
-                                        ${ps.price}
-                                    </Text>
-                                    <Text color="whiteAlpha.900" fontSize="md" mt={1}>
-                                        {ps.text}
-                                    </Text>
-                                </Flex>
-                            ))}
-                        </VStack>
-                    </Box>
-                )}
-
-                {/* Step 2: Payment Methods */}
-                {machineData?.payment_methods && machineData.payment_methods.length > 0 && (
-                    <Box w="full" mb={8}>
-                        <Text color="cyan.600" fontSize="sm" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" mb={4}>
-                            2. CHOOSE YOUR PAYMENT METHOD
-                        </Text>
-                        <VStack gap={4} align="stretch">
-                            {machineData.payment_methods.map(pm => {
-                                let LogoComponent = null;
-                                if (pm.id === 'modo_online') {
-                                    LogoComponent = <img src={modoLogo} alt="MODO" style={{ height: '24px' }} />;
-                                } else if (pm.id === 'mercadopago_checkout_pro') {
-                                    LogoComponent = <img src={mpLogo} alt="Mercado Pago" style={{ height: '24px' }} />;
-                                } else {
-                                    LogoComponent = <Text color="white" fontWeight="bold">{pm.name}</Text>;
-                                }
-
-                                return (
-                                    <Flex
-                                        key={pm.id}
-                                        align="center"
-                                        justify="center"
-                                        bg="#212833"
-                                        p={5}
-                                        borderRadius="xl"
-                                        borderWidth="1px"
-                                        borderColor="whiteAlpha.50"
-                                        cursor="pointer"
-                                        transition="all 0.2s"
-                                        onClick={() => console.log('Iniciando pago con:', pm.id)}
-                                        _hover={{ bg: '#2a3341' }}
-                                        _active={{ transform: 'scale(0.98)' }}
-                                    >
-                                        {LogoComponent}
-                                    </Flex>
-                                );
-                            })}
-                        </VStack>
-                    </Box>
-                )}
-
-                <Button
-                    id="scanner-scan-again-btn"
-                    aria-label="Escanear otro código QR"
-                    color="whiteAlpha.600"
-                    onClick={handleReset}
-                    size="sm"
-                    variant="ghost"
+                <Box
+                    backdropFilter="blur(16px)"
+                    bg="whiteAlpha.100"
+                    borderColor="whiteAlpha.200"
+                    borderRadius="2xl"
+                    borderWidth="1px"
+                    boxShadow="0 25px 50px -12px rgba(0, 0, 0, 0.5)"
+                    maxW="420px"
+                    p={8}
                     w="full"
-                    mt="auto"
-                    _hover={{ color: 'white', bg: 'whiteAlpha.100' }}
                 >
-                    {t('scanner.scanAgain')}
-                </Button>
+                    <VStack gap={6} align="stretch">
+                        <Flex justify="space-between" align="center">
+                            <Box
+                                animation="pulse 2s infinite"
+                                bg="green.900"
+                                borderRadius="full"
+                                p={3}
+                            >
+                                <Icon as={CheckCircleIcon} boxSize={8} color="green.400" />
+                            </Box>
+                            <Flex align="center" gap={2} bg="whiteAlpha.100" px={3} py={1.5} borderRadius="full" borderWidth="1px" borderColor="whiteAlpha.200">
+                                <Box
+                                    boxSize="8px"
+                                    borderRadius="full"
+                                    bg={machineData?.tagamic?.connected ? 'green.400' : 'red.400'}
+                                    boxShadow={machineData?.tagamic?.connected ? '0 0 8px rgba(74, 222, 128, 0.8)' : '0 0 8px rgba(248, 113, 113, 0.8)'}
+                                    animation={machineData?.tagamic?.connected ? 'pulse 2s infinite' : undefined}
+                                />
+                                <Text color="whiteAlpha.800" fontSize="xs" fontWeight="semibold" letterSpacing="wide" textTransform="uppercase">
+                                    {machineData?.tagamic?.connected ? 'Online' : 'Offline'}
+                                </Text>
+                            </Flex>
+                        </Flex>
+
+                        <VStack gap={1} align="flex-start">
+                            <Heading color="white" fontSize="2xl" truncate w="full">
+                                {machineData?.tagamic?.terminal?.name || 'Máquina desconocida'}
+                            </Heading>
+                            <Text color="whiteAlpha.600" fontSize="sm" truncate w="full">
+                                {machineData?.tagamic?.store?.name || 'Ubicación no registrada'}
+                            </Text>
+                            {machineData?.tagamic?.player?.name && (
+                                <Badge colorPalette="blue" variant="subtle" size="sm" mt={1}>
+                                    Jugador: {machineData.tagamic.player.name}
+                                </Badge>
+                            )}
+                        </VStack>
+
+                        <Flex justify="space-between" align="center" bg="whiteAlpha.50" p={3} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.100">
+                            <Text color="whiteAlpha.700" fontSize="sm">Estado de Activación</Text>
+                            <Badge colorPalette={machineData?.tagamic?.active ? 'green' : 'red'} size="sm">
+                                {machineData?.tagamic?.active ? 'Activo' : 'Inactivo'}
+                            </Badge>
+                        </Flex>
+
+                        {activePriceSets.length > 0 && (
+                            <VStack align="stretch" gap={3}>
+                                <Text color="whiteAlpha.500" fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider">
+                                    Precios Configurados
+                                </Text>
+                                <VStack gap={3} align="stretch">
+                                    {activePriceSets.map((ps, index) => (
+                                        <Flex key={index} justify="space-between" align="center" bg="#8b3dff" p={3} px={4} borderRadius="lg" boxShadow="0 4px 16px rgba(139, 61, 255, 0.4)">
+                                            <Text color="whiteAlpha.900" fontSize="sm" fontWeight="medium">{ps.text}</Text>
+                                            <Text color="white" fontSize="xl" fontWeight="900" fontVariantNumeric="tabular-nums">${ps.price}</Text>
+                                        </Flex>
+                                    ))}
+                                </VStack>
+                            </VStack>
+                        )}
+
+                        {machineData?.payment_methods && machineData.payment_methods.length > 0 && (
+                            <VStack align="stretch" gap={3}>
+                                <Text color="whiteAlpha.500" fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider">
+                                    Métodos de Pago
+                                </Text>
+                                <Flex wrap="wrap" gap={6} align="center" py={2}>
+                                    {machineData.payment_methods.map(pm => {
+                                        if (pm.id === 'modo_online') {
+                                            return <img key={pm.id} src={modoLogo} alt="MODO" style={{ height: '24px' }} />;
+                                        } else if (pm.id === 'mercadopago_checkout_pro') {
+                                            return <img key={pm.id} src={mpLogo} alt="Mercado Pago" style={{ height: '28px' }} />;
+                                        }
+                                        return <Text key={pm.id} color="whiteAlpha.800" fontSize="sm" fontWeight="medium">{pm.name}</Text>;
+                                    })}
+                                </Flex>
+                            </VStack>
+                        )}
+
+                        <VStack gap={3} pt={2}>
+                            <Button
+                                id="scanner-test-btn"
+                                aria-label="Iniciar prueba de funcionamiento"
+                                bg="purple.500"
+                                color="white"
+                                size="lg"
+                                w="full"
+                                onClick={() => console.log('Iniciando prueba de MP para:', qrValue)}
+                                _hover={{ bg: 'purple.400', transform: 'translateY(-1px)' }}
+                                _active={{ bg: 'purple.600', transform: 'translateY(0)' }}
+                                transition="all 0.2s"
+                            >
+                                Prueba de funcionamiento
+                            </Button>
+
+                            <Button
+                                id="scanner-scan-again-btn"
+                                aria-label="Escanear otro código QR"
+                                color="whiteAlpha.700"
+                                onClick={handleReset}
+                                size="sm"
+                                variant="ghost"
+                                w="full"
+                                _hover={{ color: 'white', bg: 'whiteAlpha.100' }}
+                            >
+                                {t('scanner.scanAgain')}
+                            </Button>
+                        </VStack>
+                    </VStack>
+                </Box>
             </Flex>
         );
     }
