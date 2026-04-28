@@ -21,8 +21,29 @@ const Scanner: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
 
     const handleDecode = (result: string) => {
-        setQrValue(result);
-        setState('success');
+        try {
+            let machineId: string | null = null;
+
+            if (result.startsWith('http')) {
+                const scannedUrl = new URL(result);
+                machineId = scannedUrl.searchParams.get('id');
+            } else {
+                // Si no es URL, asumimos que el resultado es el ID directo
+                machineId = result;
+            }
+
+            if (machineId) {
+                console.log('ID Extraído:', machineId);
+                setQrValue(machineId);
+                setState('success');
+            } else {
+                throw new Error('QR sin ID');
+            }
+        } catch (error) {
+            console.error('Error al decodificar QR:', error);
+            setErrorMessage(t('scanner.errorTitle') + ': QR inválido');
+            setState('error');
+        }
     };
 
     const handleError = (error: unknown) => {

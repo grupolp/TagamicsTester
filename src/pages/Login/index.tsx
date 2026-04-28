@@ -6,6 +6,7 @@ import {
     Box,
     Flex,
     Heading,
+    IconButton,
     Input,
     Icon,
     Text,
@@ -14,6 +15,7 @@ import {
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
+import { PasswordInput } from '@/components/ui/password-input';
 import { toaster } from '@/components/ui/toaster';
 import api from '@/services/api';
 import { AxiosError } from 'axios';
@@ -141,14 +143,13 @@ const Login: React.FC = () => {
                             invalid={!!errors.password}
                             label={t('login.password')}
                         >
-                            <Input
+                            <PasswordInput
                                 id="login-password"
                                 autoComplete="current-password"
                                 borderColor="whiteAlpha.200"
                                 color="white"
                                 px={4}
                                 placeholder={t('login.passwordPlaceholder')}
-                                type="password"
                                 _placeholder={{ color: 'whiteAlpha.400' }}
                                 _focus={{
                                     borderColor: 'purple.400',
