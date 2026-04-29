@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Scanner as QrScanner } from '@yudiel/react-qr-scanner';
 import mpLogo from '@/assets/mp-logo.svg';
@@ -33,6 +34,7 @@ const Scanner: React.FC = () => {
         return machineData?.tagamic?.price_sets?.filter(ps => ps.is_active) || [];
     }, [machineData]);
 
+
     const fetchMachineDetails = async (machineId: string) => {
         setIsLoadingData(true);
         try {
@@ -40,59 +42,70 @@ const Scanner: React.FC = () => {
             setMachineData(response.data.data);
             setState('success');
         } catch (error) {
+            const axiosError = error as AxiosError;
+            let errorMsg = 'No se pudo cargar la información de la máquina. Verificá tu conexión.';
+
+            // Criterio 7: Si la Tagamics no está registrada (Error 404 del backend)
+            if (axiosError.response?.status === 404) {
+                errorMsg = `El QR leído (${machineId}) no corresponde a una Tagamics registrada en el sistema.`;
+            } else if (axiosError.response?.status === 403) {
+                errorMsg = 'No tenés permisos para visualizar esta máquina.';
+            }
+
             toaster.create({
-                title: 'Error',
-                description: 'No se pudo cargar la información de la máquina',
+                title: 'QR Inválido o no registrado',
+                description: errorMsg,
                 type: 'error',
             });
-            setErrorMessage('No se pudo cargar la información de la máquina');
+            setErrorMessage(errorMsg);
             setState('error');
         } finally {
             setIsLoadingData(false);
         }
     };
 
+
     const handleDecode = (result: string) => {
         try {
             let machineId: string | null = null;
 
-            if (result.startsWith('http')) {
+            // Criterios 6 y 7: Validamos estrictamente que sea una URL nuestra
+            if (result.includes('tagamics.com') || result.includes('magneticash.com')) {
                 const scannedUrl = new URL(result);
                 machineId = scannedUrl.searchParams.get('id');
             } else {
-                // Si no es URL, asumimos que el resultado es el ID directo
-                machineId = result;
+                // Si lee cualquier otro QR (un menú de restaurante, un texto al azar), falla inmediatamente
+                throw new Error('El código escaneado no pertenece a una Tagamics.');
             }
 
             if (machineId) {
-                console.log('ID Extraído:', machineId);
                 setQrValue(machineId);
                 fetchMachineDetails(machineId);
             } else {
-                throw new Error('QR sin ID');
+                throw new Error('El formato del QR es inválido o ilegible (no contiene un ID).');
             }
         } catch (error) {
-            console.error('Error al decodificar QR:', error);
-            setErrorMessage(t('scanner.errorTitle') + ': QR inválido');
+            const msg = error instanceof Error ? error.message : 'QR inválido o ilegible.';
+            setErrorMessage(msg);
             setState('error');
         }
     };
 
-    const handleError = (error: unknown) => {
-        const message =
-            error instanceof Error
-                ? error.message
-                : t('scanner.errorTitle');
 
+    const handleError = (error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+
+        // Criterios 4 y 5: Detectamos si el navegador denegó el permiso de la cámara
         const isCameraPermission =
             message.toLowerCase().includes('permission') ||
             message.toLowerCase().includes('notallowed') ||
             message.toLowerCase().includes('denied');
 
+        // Mostramos un mensaje claro que bloquea el escaneo
         setErrorMessage(
             isCameraPermission
-                ? t('scanner.permissionError')
-                : `${t('scanner.errorTitle')}: ${message}`
+                ? t('scanner.permissionError') // "Permiso de cámara denegado..."
+                : `${t('scanner.errorTitle')}: Problemas al iniciar la cámara física.`
         );
         setState('error');
     };
